@@ -149,7 +149,9 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
           <div class="flex items-center">
-            <h1 class="text-2xl font-bold text-primary-600"><img src="assets/images/hadawi.png" alt="Hadawi" class="w-20 h-20"></h1>
+            <h1 class="text-2xl font-bold text-primary-600">
+              <img src="assets/images/hadawi.png" alt="Hadawi" class="w-20 h-20">
+            </h1>
           </div>
           <div class="hidden md:flex items-center space-x-8">
             <a href="#how-it-works" class="text-secondary-600 hover:text-primary-600 transition-colors">
@@ -882,7 +884,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           <!-- About Section -->
           <div>
-            <img src="assets/images/hadawi-white.png" alt="Hadawi" class="h-12 mb-6">
+            <img src="assets/images/hadawi.png" alt="Hadawi" class="h-20 mb-6 brightness-0 invert">
             <h3 class="text-lg font-semibold mb-4" data-translate="footer-about-title">About Hadawi</h3>
             <p class="text-gray-400" data-translate="footer-about-text">
               Hadawi is your trusted platform for group gifting in Saudi Arabia. We make it easy to collect money and deliver beautiful gifts.
@@ -1009,145 +1011,69 @@
     </footer>
 
     <script>
-      // Define translations first
-      const translations = {
-        en: {
-         
-        },
-        ar: {
-          
-        }
-      };
+      // Remove translations declaration since it's now in translations.js
+      
+      function initializeFAQ() {
+        const faqToggles = document.querySelectorAll('.faq-toggle');
+        
+        faqToggles.forEach(toggle => {
+          toggle.addEventListener('click', function() {
+            const content = this.parentElement.querySelector('.faq-content');
+            const arrow = this.querySelector('.faq-arrow');
+            
+            // Close all other FAQs
+            faqToggles.forEach(otherToggle => {
+              if (otherToggle !== toggle) {
+                const otherContent = otherToggle.parentElement.querySelector('.faq-content');
+                const otherArrow = otherToggle.querySelector('.faq-arrow');
+                otherContent.classList.add('hidden');
+                otherArrow.classList.remove('rotate-180');
+                otherToggle.classList.remove('bg-gray-100');
+              }
+            });
+            
+            // Toggle current FAQ
+            content.classList.toggle('hidden');
+            arrow.classList.toggle('rotate-180');
+            this.classList.toggle('bg-gray-100');
+          });
+        });
+      }
 
-      // Define all functions
+      // Initialize FAQ when DOM is loaded
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeFAQ);
+      } else {
+        initializeFAQ();
+      }
+
       function toggleLanguage() {
         const html = document.documentElement;
-        const currentLang = html.getAttribute('data-language') || 'en';
+        const currentLang = html.getAttribute('data-language');
         const newLang = currentLang === 'en' ? 'ar' : 'en';
         const newDir = newLang === 'ar' ? 'rtl' : 'ltr';
         
         // Update HTML attributes
-        html.setAttribute('data-language', newLang);
+        html.setAttribute('lang', newLang);
         html.setAttribute('dir', newDir);
+        html.setAttribute('data-language', newLang);
         
         // Update language toggle button text
-        const langToggle = document.querySelector('#language-toggle span');
-        if (langToggle) {
-          const newText = langToggle.getAttribute(`data-${currentLang}`);
-          if (newText) {
-            langToggle.textContent = newText;
-          }
-        }
+        const langToggle = document.getElementById('language-toggle');
+        const toggleText = langToggle.querySelector('span');
+        toggleText.textContent = newLang === 'ar' ? 'EN' : 'ع';
         
-        // Update translations and styles
-        updateTranslations(newLang);
-        updateLanguageSpecificStyles(newLang);
-      }
-
-      function updateTranslations(lang) {
-        if (!translations[lang]) {
-          console.warn(`Translations not found for language: ${lang}`);
-          return;
-        }
-
         // Update all translatable elements
-        document.querySelectorAll('[data-translate]:not([data-language-invariant="true"])').forEach(element => {
+        document.querySelectorAll('[data-translate]').forEach(element => {
           const key = element.getAttribute('data-translate');
-          if (key && translations[lang][key]) {
-            element.textContent = translations[lang][key];
-          } else {
-            console.warn(`Translation not found for key: ${key} in language: ${lang}`);
+          if (translations[key]) {
+            element.textContent = translations[key][newLang];
           }
         });
 
-        // Update document title and meta descriptions
-        document.title = lang === 'ar' ? 'هدوي - جمع الهدايا الجماعية بسهولة' : 'Hadawi - Group Gifting Made Easy';
-        const metaDesc = document.querySelector('meta[name="description"]');
-        if (metaDesc) {
-          metaDesc.setAttribute('content', 
-            lang === 'ar' 
-              ? 'هدوي - أسهل طريقة لجمع المال للهدايا الجماعية في المملكة العربية السعودية ودول الخليج'
-              : 'Hadawi - The easiest way to collect money for group gifts in Saudi Arabia and GCC'
-          );
-        }
+        // Update title
+        document.title = newLang === 'ar' ? 'هدوي - جمع الهدايا الجماعية بسهولة' : 'Hadawi - Group Gifting Made Easy';
       }
-
-      function updateLanguageSpecificStyles(lang) {
-        const isRTL = lang === 'ar';
-        
-        // Update text alignment classes
-        document.querySelectorAll('.text-left, .text-right').forEach(el => {
-          el.classList.remove('text-left', 'text-right');
-          el.classList.add(isRTL ? 'text-right' : 'text-left');
-        });
-
-        // Update margin classes
-        document.querySelectorAll('[class*="mr-"], [class*="ml-"]').forEach(el => {
-          const classes = el.className.split(' ');
-          classes.forEach(cls => {
-            if (cls.startsWith('mr-') || cls.startsWith('ml-')) {
-              const size = cls.split('-')[1];
-              el.classList.remove(cls);
-              el.classList.add(isRTL ? 
-                (cls.startsWith('mr-') ? `ml-${size}` : `mr-${size}`) :
-                (cls.startsWith('mr-') ? `mr-${size}` : `ml-${size}`)
-              );
-            }
-          });
-        });
-
-        // Update flex direction for specific layouts
-        document.querySelectorAll('.flex').forEach(el => {
-          if (el.classList.contains('items-center') && el.querySelector('.ml-2, .mr-2')) {
-            el.style.flexDirection = isRTL ? 'row-reverse' : 'row';
-          }
-        });
-      }
-
-      // Initialize everything after DOM is fully loaded
-      window.addEventListener('DOMContentLoaded', function() {
-        // Set initial language based on HTML attribute
-        const initialLang = document.documentElement.getAttribute('data-language') || 'en';
-        
-        // Add data-translate attributes to elements that need translation
-        const navLinks = document.querySelectorAll('nav a');
-        navLinks.forEach(link => {
-          const key = link.getAttribute('href')?.replace('#', '');
-          if (key) {
-            link.setAttribute('data-translate', key);
-          }
-        });
-
-        // Initialize translations and styles
-        updateTranslations(initialLang);
-        updateLanguageSpecificStyles(initialLang);
-
-        // Add smooth scrolling for navigation
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-          anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-              target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-              });
-            }
-          });
-        });
-
-        // Initialize FAQ toggles
-        document.querySelectorAll('.faq-toggle').forEach(toggle => {
-          toggle.addEventListener('click', function() {
-            const content = this.parentElement.querySelector('.faq-content');
-            const arrow = this.querySelector('.faq-arrow');
-            if (content && arrow) {
-              content.classList.toggle('hidden');
-              arrow.classList.toggle('rotate-180');
-            }
-          });
-        });
-      });
     </script>
   </body>
 </html>
