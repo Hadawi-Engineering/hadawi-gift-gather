@@ -252,6 +252,80 @@ const translations = {
     ar: 'من ٤٠٠ ريال'
   },
 
+  // New Gift Categories
+  'gold-title': {
+    en: 'Gold Jewelry',
+    ar: 'الذهب'
+  },
+  'gold-desc': {
+    en: 'Luxury gold jewelry for special occasions',
+    ar: 'مجوهرات ذهبية فاخرة للمناسبات الخاصة'
+  },
+  'money-title': {
+    en: 'Money Gifts',
+    ar: 'المبالغ المالية'
+  },
+  'money-desc': {
+    en: 'Elegantly wrapped monetary gifts',
+    ar: 'هدايا نقدية مغلفة بطريقة أنيقة'
+  },
+  'electronics-title': {
+    en: 'Electronics',
+    ar: 'أجهزة'
+  },
+  'electronics-desc': {
+    en: 'Latest electronic devices and gadgets',
+    ar: 'أحدث الأجهزة الإلكترونية والتقنية'
+  },
+  'traditional-title': {
+    en: 'Swords & Traditional Wear',
+    ar: 'السيوف والمشالح'
+  },
+  'traditional-desc': {
+    en: 'Luxury traditional gifts',
+    ar: 'هدايا تقليدية فاخرة'
+  },
+  'oud-title': {
+    en: 'Oud & Fragrances',
+    ar: 'العود'
+  },
+  'oud-desc': {
+    en: 'Premium oud and fragrances',
+    ar: 'عطور وبخور فاخر'
+  },
+  'religious-title': {
+    en: 'Religious Occasions',
+    ar: 'هدايا المناسبات الدينية'
+  },
+  'religious-desc': {
+    en: 'Special gifts for religious occasions',
+    ar: 'هدايا مميزة للمناسبات الدينية'
+  },
+  'eid-title': {
+    en: 'Eid Gifts',
+    ar: 'العيد / عيدية'
+  },
+  'eid-desc': {
+    en: 'Special Eid gifts and Eidiyah',
+    ar: 'هدايا وعيديات مميزة'
+  },
+  'ramadan-hajj-title': {
+    en: 'Ramadan & Hajj Gifts',
+    ar: 'هدايا رمضان والحج والعمرة'
+  },
+  'ramadan-hajj-desc': {
+    en: 'Prayer beads, incense burners, prayer rugs, prayer sheets, lanterns',
+    ar: 'سبح، مباخر، سجادات، شراشف صلاة، فوانيس'
+  },
+  'from-price': {
+    en: 'From {price} SAR',
+    ar: 'من {price} ريال'
+  },
+  'flexible-amount': {
+    en: 'Flexible Amount',
+    ar: 'مبلغ مرن'
+  },
+
   // Suggest Gift Section
   'suggest-title': {
     en: 'Have something else in mind?',
@@ -487,7 +561,70 @@ const translations = {
     en: 'How it Works',
     ar: 'كيف يعمل'
   },
+  'mockup-goal': {
+    en: '6,999 SAR',
+    ar: '٦,٩٩٩ ريال'
+  },
+  'mockup-collected': {
+    en: '5,250 SAR',
+    ar: '٥,٢٥٠ ريال'
+  },
+  'mockup-contributors': {
+    en: '25 contributors',
+    ar: '٢٥ مساهم'
+  },
+  'mockup-days-left': {
+    en: '3 days left',
+    ar: '٣ أيام متبقية'
+  },
+  'sarah-contribution': {
+    en: '1,500 SAR',
+    ar: '١,٥٠٠ ريال'
+  },
+  'mohammed-contribution': {
+    en: '2,000 SAR',
+    ar: '٢,٠٠٠ ريال'
+  },
+  'fatima-contribution': {
+    en: '1,750 SAR',
+    ar: '١,٧٥٠ ريال'
+  },
 };
+
+// Update price translations
+const priceTranslations = {
+  'gold-price': {
+    en: 'From 3,500 SAR',
+    ar: 'من ٣,٥٠٠ ريال'
+  },
+  'electronics-price': {
+    en: 'From 1,500 SAR',
+    ar: 'من ١,٥٠٠ ريال'
+  },
+  'traditional-price': {
+    en: 'From 2,500 SAR',
+    ar: 'من ٢,٥٠٠ ريال'
+  },
+  'oud-price': {
+    en: 'From 1,200 SAR',
+    ar: 'من ١,٢٠٠ ريال'
+  },
+  'religious-price': {
+    en: 'From 350 SAR',
+    ar: 'من ٣٥٠ ريال'
+  },
+  'eid-price': {
+    en: 'From 500 SAR',
+    ar: 'من ٥٠٠ ريال'
+  },
+  'ramadan-hajj-price': {
+    en: 'From 450 SAR',
+    ar: 'من ٤٥٠ ريال'
+  }
+};
+
+// Merge price translations into main translations object
+Object.assign(translations, priceTranslations);
 
 // Function to update translations
 function updateTranslations(lang) {
