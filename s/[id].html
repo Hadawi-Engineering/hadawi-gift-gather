@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" dir="ltr" data-language="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,22 +10,93 @@
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <style>
+        :root {
+            --primary-50: #F8F7FA;
+            --primary-100: #F0EDF4;
+            --primary-200: #DED7E4;
+            --primary-300: #BFB4CC;
+            --primary-400: #A697B5;
+            --primary-500: #8F7F9F;
+            --primary-600: #766689;
+            --primary-700: #5D4E6E;
+            --primary-800: #443A52;
+            --primary-900: #2B2533;
+            --font-family-en: 'Roboto', sans-serif;
+            --font-family-ar: 'Tajawal', sans-serif;
+        }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         
+        html[dir="ltr"] {
+            font-family: var(--font-family-en);
+        }
+        
+        html[dir="rtl"] {
+            font-family: var(--font-family-ar);
+        }
+        
         body {
-            font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: var(--font-family-en);
+            background: linear-gradient(135deg, var(--primary-50) 0%, #f5f5f5 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Background Pattern */
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.3;
+            z-index: 0;
+        }
+        
+        .bg-blob {
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            filter: blur(60px);
+            animation: blob 7s infinite;
+        }
+        
+        .bg-blob:nth-child(1) {
+            top: 0;
+            left: 0;
+            background: var(--primary-200);
+        }
+        
+        .bg-blob:nth-child(2) {
+            top: 0;
+            right: 0;
+            background: var(--primary-300);
+            animation-delay: 2s;
+        }
+        
+        .bg-blob:nth-child(3) {
+            bottom: 0;
+            left: 80px;
+            background: var(--primary-400);
+            animation-delay: 4s;
+        }
+        
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
         }
         
         .container {
@@ -37,24 +108,14 @@
             box-shadow: 0 8px 32px rgba(0,0,0,0.12);
             text-align: center;
             position: relative;
-            overflow: hidden;
-        }
-        
-        .container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #4285f4, #34a853, #fbbc05, #ea4335);
+            z-index: 10;
         }
         
         .logo {
             width: 64px;
             height: 64px;
             margin: 0 auto 24px;
-            background: #4285f4;
+            background: var(--primary-600);
             border-radius: 16px;
             display: flex;
             align-items: center;
@@ -68,19 +129,19 @@
         h2 {
             font-size: 24px;
             font-weight: 500;
-            color: #202124;
+            color: #1f2937;
             margin-bottom: 8px;
         }
         
         .subtitle {
             font-size: 14px;
-            color: #5f6368;
+            color: #6b7280;
             margin-bottom: 32px;
         }
         
         .spinner {
-            border: 3px solid #f1f3f4;
-            border-top: 3px solid #4285f4;
+            border: 3px solid var(--primary-100);
+            border-top: 3px solid var(--primary-600);
             border-radius: 50%;
             width: 32px;
             height: 32px;
@@ -95,7 +156,7 @@
         
         .fallback-text {
             font-size: 16px;
-            color: #5f6368;
+            color: #6b7280;
             margin-bottom: 24px;
             line-height: 1.5;
         }
@@ -139,26 +200,26 @@
         }
         
         .btn-primary {
-            background: #4285f4;
+            background: var(--primary-600);
             color: white;
-            box-shadow: 0 2px 8px rgba(66, 133, 244, 0.3);
+            box-shadow: 0 2px 8px rgba(118, 102, 137, 0.3);
         }
         
         .btn-primary:hover {
-            background: #3367d6;
-            box-shadow: 0 4px 16px rgba(66, 133, 244, 0.4);
+            background: var(--primary-700);
+            box-shadow: 0 4px 16px rgba(118, 102, 137, 0.4);
             transform: translateY(-2px);
         }
         
         .btn-app {
-            background: #f8f9fa;
-            color: #202124;
-            border: 1px solid #e8eaed;
+            background: #f9fafb;
+            color: #1f2937;
+            border: 1px solid #e5e7eb;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         
         .btn-app:hover {
-            background: #f1f3f4;
+            background: #f3f4f6;
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
             transform: translateY(-1px);
         }
@@ -183,14 +244,24 @@
         
         .btn-sublabel {
             font-size: 12px;
-            color: #5f6368;
+            color: #6b7280;
             margin-top: 2px;
         }
         
         .divider {
             margin: 24px 0;
             height: 1px;
-            background: #e8eaed;
+            background: #e5e7eb;
+        }
+        
+        /* RTL Support */
+        html[dir="rtl"] .btn-icon {
+            margin-right: 0;
+            margin-left: 12px;
+        }
+        
+        html[dir="rtl"] .btn-text {
+            text-align: right;
         }
         
         @media (max-width: 480px) {
@@ -210,6 +281,10 @@
     </style>
 </head>
 <body>
+    <div class="bg-blob"></div>
+    <div class="bg-blob"></div>
+    <div class="bg-blob"></div>
+    
     <div class="container">
         <div class="logo">H</div>
         <h2>Opening Hadawi App</h2>
