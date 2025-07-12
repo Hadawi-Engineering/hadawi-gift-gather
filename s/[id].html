@@ -1,43 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Simple Test</title>
+    <title>Test Native Links</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-link { display: block; padding: 20px; margin: 10px 0; background: #007bff; color: white; text-decoration: none; border-radius: 8px; text-align: center; }
+        .test-link:hover { background: #0056b3; }
+    </style>
 </head>
 <body>
-    <h1>Simple Deep Link Test</h1>
+    <h1>Native Link Test</h1>
+    <p>Test the native deep link handling:</p>
     
-    <p>Testing different link formats:</p>
+    <a href="hadawi://s/test123" class="test-link">
+        🔗 Test Short Link: hadawi://s/test123
+    </a>
     
-    <div style="margin: 20px 0;">
-        <a href="hadawi://s/test123" style="display: block; padding: 15px; background: #007bff; color: white; text-decoration: none; margin: 10px 0; border-radius: 5px;">
-            Test Short Link: hadawi://s/test123
-        </a>
-    </div>
+    <a href="hadawi://occasion/direct456" class="test-link">
+        🎯 Test Direct Link: hadawi://occasion/direct456
+    </a>
     
-    <div style="margin: 20px 0;">
-        <a href="hadawi://occasion/direct123" style="display: block; padding: 15px; background: #28a745; color: white; text-decoration: none; margin: 10px 0; border-radius: 5px;">
-            Test Direct: hadawi://occasion/direct123
-        </a>
-    </div>
+    <button onclick="testJS()" class="test-link" style="border: none; cursor: pointer;">
+        ⚡ Test JavaScript
+    </button>
     
-    <div style="margin: 20px 0;">
-        <button onclick="testDirect()" style="padding: 15px; background: #dc3545; color: white; border: none; border-radius: 5px; width: 100%;">
-            Test JavaScript Direct
-        </button>
+    <div id="log" style="margin-top: 20px; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+        <h3>Console:</h3>
+        <div id="console"></div>
     </div>
     
     <script>
-        function testDirect() {
-            console.log('Testing direct link...');
-            window.location.href = 'hadawi://s/test123';
+        function log(message) {
+            const console = document.getElementById('console');
+            console.innerHTML += '<p>' + new Date().toLocaleTimeString() + ': ' + message + '</p>';
+            console.scrollTop = console.scrollHeight;
         }
         
-        // Auto test
+        function testJS() {
+            log('Testing JavaScript link...');
+            window.location.href = 'hadawi://s/jstest789';
+        }
+        
+        // Auto test after 3 seconds
         setTimeout(() => {
-            console.log('Auto test starting...');
-            window.location.href = 'hadawi://s/test123';
+            log('Auto test starting...');
+            window.location.href = 'hadawi://s/autotest';
         }, 3000);
+        
+        log('Test page loaded');
     </script>
 </body>
 </html> 
