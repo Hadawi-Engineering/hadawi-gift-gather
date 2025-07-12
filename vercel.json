@@ -1,0 +1,27 @@
+{
+    "rewrites": [
+      {
+        "source": "/s/(.*)",
+        "destination": "/s/[id].html"
+      },
+      {
+        "source": "/occasion/(.*)",
+        "destination": "/s/[id].html"
+      },
+      {
+        "source": "/payment/(.*)",
+        "destination": "/s/[id].html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "/.well-known/(.*)",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ]
+      }
+    ]
+  }
