@@ -375,22 +375,25 @@
             
             // Try custom scheme first
             const customSchemeUrl = `hadawi://s/${occasionId}`;
+            console.log('Trying custom scheme URL:', customSchemeUrl);
             safeRedirect(customSchemeUrl, 'Custom Scheme');
             
-            // If custom scheme doesn't work, try intent URL after 1.5 seconds
+            // If custom scheme doesn't work, try intent URL after 1 second
             setTimeout(() => {
                 if (!hasRedirected) {
+                    console.log('Custom scheme failed, trying intent URL');
                     const intentUrl = `intent://s/${occasionId}#Intent;scheme=hadawi;package=com.app.hadawi_app;S.browser_fallback_url=https://hadawi-payment.web.app/s/${occasionId};end`;
                     safeRedirect(intentUrl, 'Intent URL');
                 }
-            }, 1500);
+            }, 1000);
             
-            // Final fallback to web app after 4 seconds
+            // Final fallback to web app after 2.5 seconds
             setTimeout(() => {
                 if (!hasRedirected) {
+                    console.log('All methods failed, redirecting to web app');
                     safeRedirect(`https://hadawi-payment.web.app/s/${occasionId}`, 'Web App');
                 }
-            }, 4000);
+            }, 2500);
             
         } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
             // iOS - use custom scheme first, then Universal Links
@@ -398,21 +401,34 @@
             
             // Try custom scheme first
             const customSchemeUrl = `hadawi://s/${occasionId}`;
-            safeRedirect(customSchemeUrl, 'Custom Scheme');
+            console.log('Trying custom scheme URL:', customSchemeUrl);
             
-            // If custom scheme doesn't work, try Universal Links after 1.5 seconds
+            // Create a hidden iframe to try opening the app
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = customSchemeUrl;
+            document.body.appendChild(iframe);
+            
+            // Clean up iframe after a short delay
+            setTimeout(() => {
+                document.body.removeChild(iframe);
+            }, 100);
+            
+            // If custom scheme doesn't work, try Universal Links after 1 second
             setTimeout(() => {
                 if (!hasRedirected) {
+                    console.log('Custom scheme failed, trying Universal Links');
                     safeRedirect(appUrl, 'Universal Links');
                 }
-            }, 1500);
+            }, 1000);
             
-            // Final fallback to web app after 4 seconds
+            // Final fallback to web app after 2.5 seconds
             setTimeout(() => {
                 if (!hasRedirected) {
+                    console.log('All methods failed, redirecting to web app');
                     safeRedirect(`https://hadawi-payment.web.app/s/${occasionId}`, 'Web App');
                 }
-            }, 4000);
+            }, 2500);
             
         } else {
             // Desktop - redirect to web app immediately
@@ -424,6 +440,15 @@
         setTimeout(() => {
             sessionStorage.removeItem(STORAGE_KEY);
         }, 5000);
+        
+        // Failsafe: If nothing worked after 3 seconds, force redirect to web app
+        setTimeout(() => {
+            if (!hasRedirected) {
+                console.log('FAILSAFE: Force redirecting to web app');
+                hasRedirected = true;
+                window.location.href = `https://hadawi-payment.web.app/s/${occasionId}`;
+            }
+        }, 3000);
     </script>
 </body>
 </html> 
