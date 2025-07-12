@@ -399,20 +399,8 @@
             console.log('iOS device detected');
             
             // Try custom scheme first
-            const customSchemeUrl = `hadawi://s/${occasionId}`;
-            console.log('Trying custom scheme URL:', customSchemeUrl);
-            
-            // Create a hidden iframe to try opening the app
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = customSchemeUrl;
-            document.body.appendChild(iframe);
-            
-            // Clean up iframe after a short delay
-            setTimeout(() => {
-                document.body.removeChild(iframe);
-            }, 100);
-            
+            const appUrl = `hadawi://s/${occasionId}`;
+            window.location.href = appUrl;
             // If custom scheme doesn't work, try Universal Links after 1 second
             setTimeout(() => {
                 if (!hasRedirected) {
