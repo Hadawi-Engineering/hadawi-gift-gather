@@ -329,34 +329,46 @@
         const urlPath = window.location.pathname;
         const occasionId = urlPath.split('/').pop();
         
-        // Try to open the app
+        console.log('Occasion ID:', occasionId);
+        console.log('Current URL:', window.location.href);
+        
+        // Try to open the app using App Links/Universal Links
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        const currentUrl = window.location.href;
+        const appUrl = `https://hadawi.sa/s/${occasionId}`;
+        
+        console.log('Trying to open app with URL:', appUrl);
         
         if (/android/i.test(userAgent)) {
-            // Android - try intent first
-            const intentUrl = `intent://s/${occasionId}#Intent;scheme=hadawi;package=com.app.hadawi_app;end`;
-            window.location.href = intentUrl;
+            // Android - use App Links
+            console.log('Android device detected');
             
-            // Fallback to web app after 3 seconds
+            // Try to open the app directly
+            window.location.href = appUrl;
+            
+            // Fallback to web app after 3 seconds if app doesn't open
             setTimeout(() => {
+                console.log('Fallback to web app');
                 window.location.href = `https://hadawi-payment.web.app/s/${occasionId}`;
             }, 3000);
             
         } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-            // iOS - try universal link
-            const appUrl = `hadawi://s/${occasionId}`;
+            // iOS - use Universal Links
+            console.log('iOS device detected');
+            
+            // Try to open the app directly
             window.location.href = appUrl;
             
-            // Fallback to web app after 3 seconds
+            // Fallback to web app after 3 seconds if app doesn't open
             setTimeout(() => {
+                console.log('Fallback to web app');
                 window.location.href = `https://hadawi-payment.web.app/s/${occasionId}`;
             }, 3000);
             
         } else {
             // Desktop - redirect to web app immediately
+            console.log('Desktop detected, redirecting to web app');
             window.location.href = `https://hadawi-payment.web.app/s/${occasionId}`;
         }
-    </script>
+    </script> 
 </body>
 </html>
