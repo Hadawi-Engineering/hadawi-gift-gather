@@ -47,11 +47,11 @@
             background: linear-gradient(135deg, var(--primary-50) 0%, #f5f5f5 100%);
             min-height: 100vh;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
             padding: 20px;
             position: relative;
-            overflow: hidden;
+            overflow-y: auto;
         }
         
         /* Background Pattern */
@@ -109,6 +109,7 @@
             text-align: center;
             position: relative;
             z-index: 10;
+            margin: 20px 0;
         }
         
         .logo {
@@ -608,9 +609,15 @@
         }
         
         @media (max-width: 480px) {
+            body {
+                padding: 10px;
+                align-items: flex-start;
+            }
+            
             .container {
                 padding: 24px;
-                margin: 16px;
+                margin: 10px;
+                max-width: calc(100vw - 20px);
             }
             
             h2 {
@@ -619,6 +626,14 @@
             
             .btn {
                 padding: 14px 20px;
+            }
+            
+            .payment-section {
+                padding: 20px;
+            }
+            
+            .completion-section {
+                padding: 24px;
             }
         }
     </style>
@@ -1111,14 +1126,14 @@
                             sessionStorage.setItem('transactionRef', paymentResult.transactionRef);
                         }
                         
-                        // Complete payment
+                        // Complete Apple Pay session
                         session.completePayment(ApplePaySession.STATUS_SUCCESS);
                         
-                        // Redirect to payment result page
+                        // Redirect to ClickPay payment page (same as regular flow)
                         if (paymentResult.success && paymentResult.paymentUrl) {
                             window.location.href = paymentResult.paymentUrl;
                         } else {
-                            window.location.href = 'https://hadawi.sa/payment/result';
+                            throw new Error('No payment URL received');
                         }
                     } else {
                         throw new Error('Payment initiation failed');
