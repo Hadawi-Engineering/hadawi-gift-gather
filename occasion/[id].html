@@ -497,6 +497,32 @@
             cursor: not-allowed;
         }
         
+        /* Payment Buttons Container */
+        .payment-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        
+        /* Apple Pay Button */
+        .btn-apple-pay {
+            background: #000;
+            color: white;
+            border: 1px solid #000;
+            font-weight: 600;
+        }
+        
+        .btn-apple-pay:hover {
+            background: #333;
+            border-color: #333;
+            transform: translateY(-1px);
+        }
+        
+        .btn-apple-pay .btn-icon {
+            color: white;
+        }
+        
         /* Completion Section */
         .completion-section {
             background: linear-gradient(135deg, var(--success-100) 0%, #f0fdf4 100%);
@@ -838,8 +864,8 @@
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="contributorEmail">Email (Optional)</label>
-                                    <input type="email" id="contributorEmail" name="contributorEmail">
+                                    <label for="contributorEmail">Email *</label>
+                                    <input type="email" id="contributorEmail" name="contributorEmail" required>
                                 </div>
                                 
                                 <div class="form-group">
@@ -847,12 +873,21 @@
                                     <textarea id="message" name="message" rows="3" placeholder="Write a personal message..."></textarea>
                                 </div>
                                 
-                                <button type="submit" class="btn btn-primary payment-btn">
-                                    <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                                    </svg>
-                                    Pay ${data.amountForEveryone} SAR
-                                </button>
+                                <div class="payment-buttons">
+                                    <button type="submit" class="btn btn-primary payment-btn">
+                                        <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                        </svg>
+                                        Pay ${data.amountForEveryone} SAR
+                                    </button>
+                                    
+                                    <button type="button" class="btn btn-apple-pay" id="applePayBtn" style="display: none;" onclick="initiateApplePay()">
+                                        <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                                        </svg>
+                                        Pay with Apple Pay
+                                    </button>
+                                </div>
                             </form>
                         </div>`
                     }
@@ -863,6 +898,9 @@
             
             // Add event listener for payment form
             document.getElementById('paymentForm').addEventListener('submit', handlePayment);
+            
+            // Check Apple Pay support and show button if available
+            checkApplePaySupport();
         }
         
         // Function to show error state
@@ -889,10 +927,9 @@
                 amount: parseFloat(window.occasionData.amountForEveryone),
                 payerName: formData.get('contributorName'),
                 payerPhone: formData.get('contributorPhone'),
-                payerEmail: formData.get('contributorEmail') || '',
+                payerEmail: formData.get('contributorEmail'),
                 message: formData.get('message') || '',
                 currency: "SAR",
-                returnUrl: "https://hadawi.sa/payment/result"
             };
             
             try {
@@ -949,6 +986,163 @@
                 submitBtn.innerHTML = `Pay ${window.occasionData.amountForEveryone} SAR`;
                 submitBtn.disabled = false;
             }
+        }
+        
+        // Apple Pay Support Functions
+        function checkApplePaySupport() {
+            if (window.ApplePaySession && ApplePaySession.canMakePayments()) {
+                console.log('Apple Pay is supported');
+                const applePayBtn = document.getElementById('applePayBtn');
+                if (applePayBtn) {
+                    applePayBtn.style.display = 'flex';
+                }
+            } else {
+                console.log('Apple Pay is not supported');
+            }
+        }
+        
+        function initiateApplePay() {
+            // Check Apple Pay availability
+            if (!window.ApplePaySession || !ApplePaySession.canMakePayments()) {
+                alert('Apple Pay is not available on this device');
+                return;
+            }
+            
+            // Get form data
+            const form = document.getElementById('paymentForm');
+            const formData = new FormData(form);
+            
+            // Create payment request
+            const paymentRequest = {
+                countryCode: 'SA',
+                currencyCode: 'SAR',
+                merchantCapabilities: [
+                    'supports3DS',
+                    'supportsCredit',
+                    'supportsDebit'
+                ],
+                supportedNetworks: [
+                    'visa',
+                    'masterCard',
+                    'amex',
+                    'mada'
+                ],
+                total: {
+                    label: 'Hadawi Payment',
+                    amount: window.occasionData.amountForEveryone
+                },
+                merchantIdentifier: 'merchant.com.app.hadawiapp'
+            };
+            
+            // Create Apple Pay session
+            const session = new ApplePaySession(3, paymentRequest);
+            
+            // Handle merchant validation
+            session.onvalidatemerchant = async (event) => {
+                try {
+                    console.log('Validating merchant with Apple...');
+                    const response = await fetch('https://api.hadawi.sa/payments/validate-merchant', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            validationURL: event.validationURL
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        const merchantSession = await response.json();
+                        session.completeMerchantValidation(merchantSession);
+                    } else {
+                        throw new Error('Merchant validation failed');
+                    }
+                } catch (error) {
+                    console.error('Merchant validation failed:', error);
+                    session.abort();
+                }
+            };
+            
+            // Handle payment authorization
+            session.onpaymentauthorized = async (event) => {
+                try {
+                    console.log('Processing Apple Pay payment...');
+                    
+                    // Extract Apple Pay token
+                    const applePayToken = event.payment.token;
+                    
+                    // Create payment data with Apple Pay token
+                    const paymentData = {
+                        occasionId: window.occasionData.id,
+                        amount: parseFloat(window.occasionData.amountForEveryone),
+                        payerName: formData.get('contributorName'),
+                        payerPhone: formData.get('contributorPhone'),
+                        payerEmail: formData.get('contributorEmail'),
+                        message: formData.get('message') || '',
+                        currency: "SAR",
+                        returnUrl: "https://hadawi.sa/payment/result",
+                        apple_pay_token: applePayToken
+                    };
+                    
+                    // Store form data for later use
+                    sessionStorage.setItem('paymentFormData', JSON.stringify({
+                        contributorName: formData.get('contributorName'),
+                        contributorPhone: formData.get('contributorPhone'),
+                        contributorEmail: formData.get('contributorEmail'),
+                        message: formData.get('message'),
+                        occasionId: window.occasionData.id
+                    }));
+                    
+                    // Process payment with Apple Pay token
+                    const response = await fetch('https://api.hadawi.sa/payments/initiate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(paymentData)
+                    });
+                    
+                    if (response.ok) {
+                        const paymentResult = await response.json();
+                        console.log('Apple Pay payment initiated:', paymentResult);
+                        
+                        // Store transaction reference
+                        if (paymentResult.transactionRef) {
+                            sessionStorage.setItem('transactionRef', paymentResult.transactionRef);
+                        }
+                        
+                        // Complete payment
+                        session.completePayment(ApplePaySession.STATUS_SUCCESS);
+                        
+                        // Redirect to payment result page
+                        if (paymentResult.success && paymentResult.paymentUrl) {
+                            window.location.href = paymentResult.paymentUrl;
+                        } else {
+                            window.location.href = 'https://hadawi.sa/payment/result';
+                        }
+                    } else {
+                        throw new Error('Payment initiation failed');
+                    }
+                } catch (error) {
+                    console.error('Apple Pay payment failed:', error);
+                    session.completePayment(ApplePaySession.STATUS_FAILURE);
+                    alert('Payment failed. Please try again.');
+                }
+            };
+            
+            // Handle errors
+            session.onerror = (event) => {
+                console.error('Apple Pay error:', event);
+                alert('Apple Pay error occurred');
+            };
+            
+            // Handle cancellation
+            session.oncancel = (event) => {
+                console.log('Apple Pay cancelled by user');
+            };
+            
+            // Start the session
+            session.begin();
         }
         
         if (/android/i.test(userAgent)) {
