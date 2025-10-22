@@ -311,6 +311,192 @@
             width: 100%;
         }
         
+        /* Occasion Header */
+        .occasion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .occasion-header h3 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+        }
+        
+        .occasion-type {
+            background: var(--primary-100);
+            color: var(--primary-700);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        /* Meta Items */
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            color: var(--primary-500);
+        }
+        
+        /* Occasion Note */
+        .occasion-note {
+            background: #f9fafb;
+            border-left: 4px solid var(--primary-500);
+            padding: 12px 16px;
+            margin: 16px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .occasion-note p {
+            margin: 0;
+            font-size: 14px;
+            color: #374151;
+        }
+        
+        /* Gift Info */
+        .gift-info {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 20px 0;
+        }
+        
+        .gift-info h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0 0 12px 0;
+        }
+        
+        .gift-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .gift-type {
+            font-size: 14px;
+            color: var(--primary-600);
+            font-weight: 500;
+        }
+        
+        .gift-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .gift-amount {
+            font-size: 18px;
+            font-weight: 700;
+            color: #059669;
+        }
+        
+        /* Payment Section */
+        .payment-section {
+            background: white;
+            border: 2px solid var(--primary-200);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 24px;
+        }
+        
+        .payment-amount {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .payment-amount h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0 0 12px 0;
+        }
+        
+        .amount-display {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 4px;
+        }
+        
+        .amount-display .currency {
+            font-size: 18px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .amount-display .amount {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-600);
+        }
+        
+        /* Payment Form */
+        .payment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .form-group label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(118, 102, 137, 0.1);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .payment-btn {
+            margin-top: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 16px 24px;
+        }
+        
+        .payment-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
         @media (max-width: 480px) {
             .container {
                 padding: 24px;
@@ -445,6 +631,9 @@
         
         // Function to display occasion details
         function displayOccasionDetails(data) {
+            // Store occasion data globally for payment handling
+            window.occasionData = data;
+            
             // Hide the loading spinner
             const spinner = document.querySelector('.spinner');
             if (spinner) spinner.style.display = 'none';
@@ -453,8 +642,8 @@
             const title = document.querySelector('h2');
             const subtitle = document.querySelector('.subtitle');
             
-            if (title) title.textContent = data.title || 'Occasion Details';
-            if (subtitle) subtitle.textContent = data.description || 'Continue your gift gathering process';
+            if (title) title.textContent = data.occasionName || 'Occasion Details';
+            if (subtitle) subtitle.textContent = `Gift for ${data.receiverName || 'the recipient'}`;
             
             // Hide the fallback text and buttons
             const fallbackText = document.querySelector('.fallback-text');
@@ -463,26 +652,103 @@
             if (fallbackText) fallbackText.style.display = 'none';
             if (buttons) buttons.style.display = 'none';
             
+            // Format date
+            const occasionDate = new Date(data.occasionDate).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
             // Add occasion details content
             const container = document.querySelector('.container');
             const detailsDiv = document.createElement('div');
             detailsDiv.className = 'occasion-details';
             detailsDiv.innerHTML = `
                 <div class="occasion-info">
-                    <h3>${data.title || 'Occasion'}</h3>
-                    <p class="occasion-description">${data.description || ''}</p>
-                    <div class="occasion-meta">
-                        <span class="date">${data.date || ''}</span>
-                        <span class="participants">${data.participants || 0} participants</span>
+                    <div class="occasion-header">
+                        <h3>${data.occasionName}</h3>
+                        <span class="occasion-type">${data.type}</span>
                     </div>
-                </div>
-                <div class="action-buttons">
-                    <button class="btn btn-primary" onclick="joinOccasion()">Join Occasion</button>
-                    <button class="btn btn-app" onclick="shareOccasion()">Share</button>
+                    
+                    <div class="occasion-meta">
+                        <div class="meta-item">
+                            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                            </svg>
+                            <span>${occasionDate}</span>
+                        </div>
+                        <div class="meta-item">
+                            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            </svg>
+                            <span>${data.receiverName}</span>
+                        </div>
+                        <div class="meta-item">
+                            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span>${data.city}, ${data.district}</span>
+                        </div>
+                    </div>
+                    
+                    ${data.note ? `<div class="occasion-note">
+                        <p><strong>Note:</strong> ${data.note}</p>
+                    </div>` : ''}
+                    
+                    <div class="gift-info">
+                        <h4>Gift Details</h4>
+                        <div class="gift-details">
+                            <div class="gift-type">${data.giftType}</div>
+                            ${data.giftName ? `<div class="gift-name">${data.giftName}</div>` : ''}
+                            <div class="gift-amount">${data.giftPrice} SAR</div>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-section">
+                        <div class="payment-amount">
+                            <h4>Your Contribution</h4>
+                            <div class="amount-display">
+                                <span class="currency">SAR</span>
+                                <span class="amount">${data.amountForEveryone}</span>
+                            </div>
+                        </div>
+                        
+                        <form id="paymentForm" class="payment-form">
+                            <div class="form-group">
+                                <label for="contributorName">Your Name *</label>
+                                <input type="text" id="contributorName" name="contributorName" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contributorPhone">Phone Number *</label>
+                                <input type="tel" id="contributorPhone" name="contributorPhone" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contributorEmail">Email (Optional)</label>
+                                <input type="email" id="contributorEmail" name="contributorEmail">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="message">Message for ${data.receiverName} (Optional)</label>
+                                <textarea id="message" name="message" rows="3" placeholder="Write a personal message..."></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary payment-btn">
+                                <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                </svg>
+                                Pay ${data.amountForEveryone} SAR
+                            </button>
+                        </form>
+                    </div>
                 </div>
             `;
             
             container.appendChild(detailsDiv);
+            
+            // Add event listener for payment form
+            document.getElementById('paymentForm').addEventListener('submit', handlePayment);
         }
         
         // Function to show error state
@@ -497,16 +763,60 @@
             }
         }
         
-        // Function to join occasion
-        function joinOccasion() {
-            // Implement join occasion logic
-            console.log('Joining occasion...');
-        }
-        
-        // Function to share occasion
-        function shareOccasion() {
-            // Implement share logic
-            console.log('Sharing occasion...');
+        // Function to handle payment
+        async function handlePayment(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const formData = new FormData(form);
+            const paymentData = {
+                contributorName: formData.get('contributorName'),
+                contributorPhone: formData.get('contributorPhone'),
+                contributorEmail: formData.get('contributorEmail'),
+                message: formData.get('message'),
+                amount: window.occasionData.amountForEveryone,
+                occasionId: window.occasionData.id
+            };
+            
+            try {
+                // Show loading state
+                const submitBtn = form.querySelector('.payment-btn');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; margin: 0 auto;"></div> Processing...';
+                submitBtn.disabled = true;
+                
+                // Create payment with ClickPay
+                const response = await fetch('https://api.hadawi.sa/payments/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(paymentData)
+                });
+                
+                if (response.ok) {
+                    const paymentResult = await response.json();
+                    console.log('Payment created:', paymentResult);
+                    
+                    // Redirect to ClickPay hosted payment page
+                    if (paymentResult.paymentUrl) {
+                        window.location.href = paymentResult.paymentUrl;
+                    } else {
+                        throw new Error('No payment URL received');
+                    }
+                } else {
+                    throw new Error('Failed to create payment');
+                }
+                
+            } catch (error) {
+                console.error('Payment error:', error);
+                alert('Payment failed. Please try again.');
+                
+                // Reset button
+                const submitBtn = form.querySelector('.payment-btn');
+                submitBtn.innerHTML = `Pay ${window.occasionData.amountForEveryone} SAR`;
+                submitBtn.disabled = false;
+            }
         }
         
         if (/android/i.test(userAgent)) {
