@@ -655,7 +655,7 @@
                 <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                 </svg>
-                <span>Open Web Version</span>
+                <span>متابعة على الويب</span>
             </button>
             
             <div class="divider"></div>
@@ -683,23 +683,117 @@
     </div>
 
     <script>
+        // Language support
+        function getLanguage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const lang = urlParams.get('lang') || navigator.language.split('-')[0];
+            return lang === 'en' ? 'en' : 'ar'; // Default to Arabic
+        }
+        
+        function updateLanguage() {
+            const lang = getLanguage();
+            
+            // Update page direction
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.documentElement.setAttribute('data-language', lang);
+            
+            // Update all text elements
+            const translations = {
+                en: {
+                    title: "Opening Hadawi App",
+                    subtitle: "Please wait while we redirect you...",
+                    fallbackText: "If the app doesn't open automatically:",
+                    continueBtn: "Continue on Web",
+                    downloadIOS: "Download for iOS",
+                    downloadAndroid: "Download for Android",
+                    availableIOS: "Available on App Store",
+                    availableAndroid: "Available on Google Play",
+                    occasionDetails: "Occasion Details",
+                    giftFor: "Gift for",
+                    giftDetails: "Gift Details",
+                    yourContribution: "Your Contribution",
+                    yourName: "Your Name *",
+                    phoneNumber: "Phone Number *",
+                    email: "Email *",
+                    message: "Message for",
+                    messagePlaceholder: "Write a personal message...",
+                    payButton: "Pay",
+                    giftGoalAchieved: "Gift Goal Achieved! 🎉",
+                    thankYouMessage: "This occasion has reached its funding goal. Thank you to all contributors!",
+                    totalCollected: "Total Collected:",
+                    contributors: "Contributors:",
+                    people: "people"
+                },
+                ar: {
+                    title: "فتح تطبيق هداوي",
+                    subtitle: "يرجى الانتظار بينما نعيد توجيهك...",
+                    fallbackText: "إذا لم يفتح التطبيق تلقائياً:",
+                    continueBtn: "متابعة على الويب",
+                    downloadIOS: "تحميل لـ iOS",
+                    downloadAndroid: "تحميل لـ Android",
+                    availableIOS: "متوفر على App Store",
+                    availableAndroid: "متوفر على Google Play",
+                    occasionDetails: "تفاصيل المناسبة",
+                    giftFor: "هدية لـ",
+                    giftDetails: "تفاصيل الهدية",
+                    yourContribution: "مساهمتك",
+                    yourName: "اسمك *",
+                    phoneNumber: "رقم الهاتف *",
+                    email: "البريد الإلكتروني *",
+                    message: "رسالة لـ",
+                    messagePlaceholder: "اكتب رسالة شخصية...",
+                    payButton: "دفع",
+                    giftGoalAchieved: "تم تحقيق هدف الهدية! 🎉",
+                    thankYouMessage: "وصلت هذه المناسبة إلى هدف التمويل. شكراً لجميع المساهمين!",
+                    totalCollected: "إجمالي المجموع:",
+                    contributors: "المساهمون:",
+                    people: "شخص"
+                }
+            };
+            
+            const t = translations[lang];
+            
+            // Update main page elements
+            const title = document.querySelector('h2');
+            const subtitle = document.querySelector('.subtitle');
+            const fallbackText = document.querySelector('.fallback-text');
+            
+            if (title) title.textContent = t.title;
+            if (subtitle) subtitle.textContent = t.subtitle;
+            if (fallbackText) fallbackText.textContent = t.fallbackText;
+            
+            // Update buttons
+            const continueBtn = document.querySelector('.btn-primary span');
+            if (continueBtn) continueBtn.textContent = t.continueBtn;
+            
+            // Update app store buttons
+            const iosBtn = document.querySelector('.btn-app .btn-label');
+            const androidBtn = document.querySelectorAll('.btn-app .btn-label')[1];
+            const iosSublabel = document.querySelector('.btn-app .btn-sublabel');
+            const androidSublabel = document.querySelectorAll('.btn-app .btn-sublabel')[1];
+            
+            if (iosBtn) iosBtn.textContent = t.downloadIOS;
+            if (androidBtn) androidBtn.textContent = t.downloadAndroid;
+            if (iosSublabel) iosSublabel.textContent = t.availableIOS;
+            if (androidSublabel) androidSublabel.textContent = t.availableAndroid;
+        }
+        
         // Prevent infinite refresh loops
         const STORAGE_KEY = 'hadawi_redirect_attempts';
         const MAX_ATTEMPTS = 3;
+        
+        // Initialize language
+        updateLanguage();
         
         // Get the occasion ID from URL
         const urlPath = window.location.pathname;
         const occasionId = urlPath.split('/').pop();
         
-        console.log('Occasion ID:', occasionId);
-        console.log('Current URL:', window.location.href);
         
         // Check if we've already tried too many times
         let attempts = parseInt(sessionStorage.getItem(STORAGE_KEY) || '0');
-        console.log('Previous attempts:', attempts);
         
         if (attempts >= MAX_ATTEMPTS) {
-            console.log('Max attempts reached, loading occasion details from backend');
             loadOccasionDetails();
         }
         
@@ -711,17 +805,14 @@
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
         const appUrl = `https://hadawi.app/occasion/${occasionId}`;
         
-        console.log('Trying to open app with URL:', appUrl);
         
         // Track if we've already tried to redirect
         let hasRedirected = false;
         
         function safeRedirect(url, description) {
             if (hasRedirected) {
-                console.log('Already redirected, skipping:', description);
                 return;
             }
-            console.log('Redirecting to:', description, url);
             hasRedirected = true;
             window.location.href = url;
         }
@@ -732,14 +823,12 @@
         
         async function loadOccasionDetails() {
             if (isLoadingOccasionDetails || hasLoadedOccasionDetails) {
-                console.log('Already loading or loaded occasion details, skipping...');
                 return;
             }
             
             isLoadingOccasionDetails = true;
             
             try {
-                console.log('Loading occasion details from backend...');
                 const response = await fetch('https://api.hadawi.sa/occasions/occasion-details', {
                     method: 'POST',
                     headers: {
@@ -752,15 +841,12 @@
                 
                 if (response.ok) {
                     const occasionData = await response.json();
-                    console.log('Occasion details loaded:', occasionData);
                     hasLoadedOccasionDetails = true;
                     displayOccasionDetails(occasionData);
                 } else {
-                    console.error('Failed to load occasion details');
                     showErrorState();
                 }
             } catch (error) {
-                console.error('Error loading occasion details:', error);
                 showErrorState();
             } finally {
                 isLoadingOccasionDetails = false;
@@ -776,12 +862,53 @@
             const spinner = document.querySelector('.spinner');
             if (spinner) spinner.style.display = 'none';
             
+            // Get current language
+            const lang = getLanguage();
+            const translations = {
+                en: {
+                    occasionDetails: "Occasion Details",
+                    giftFor: "Gift for",
+                    giftDetails: "Gift Details",
+                    yourContribution: "Your Contribution",
+                    yourName: "Your Name *",
+                    phoneNumber: "Phone Number *",
+                    email: "Email *",
+                    message: "Message for",
+                    messagePlaceholder: "Write a personal message...",
+                    payButton: "Pay",
+                    giftGoalAchieved: "Gift Goal Achieved! 🎉",
+                    thankYouMessage: "This occasion has reached its funding goal. Thank you to all contributors!",
+                    totalCollected: "Total Collected:",
+                    contributors: "Contributors:",
+                    people: "people"
+                },
+                ar: {
+                    occasionDetails: "تفاصيل المناسبة",
+                    giftFor: "هدية لـ",
+                    giftDetails: "تفاصيل الهدية",
+                    yourContribution: "مساهمتك",
+                    yourName: "اسمك *",
+                    phoneNumber: "رقم الهاتف *",
+                    email: "البريد الإلكتروني *",
+                    message: "رسالة لـ",
+                    messagePlaceholder: "اكتب رسالة شخصية...",
+                    payButton: "دفع",
+                    giftGoalAchieved: "تم تحقيق هدف الهدية! 🎉",
+                    thankYouMessage: "وصلت هذه المناسبة إلى هدف التمويل. شكراً لجميع المساهمين!",
+                    totalCollected: "إجمالي المجموع:",
+                    contributors: "المساهمون:",
+                    people: "شخص"
+                }
+            };
+            
+            const t = translations[lang];
+            
             // Update the title and subtitle
             const title = document.querySelector('h2');
             const subtitle = document.querySelector('.subtitle');
             
-            if (title) title.textContent = data.occasionName || 'Occasion Details';
-            if (subtitle) subtitle.textContent = `Gift for ${data.receiverName || 'the recipient'}`;
+            if (title) title.textContent = data.occasionName || t.occasionDetails;
+            if (subtitle) subtitle.textContent = `${t.giftFor} ${data.receiverName || 'the recipient'}`;
             
             // Hide the fallback text and buttons
             const fallbackText = document.querySelector('.fallback-text');
@@ -828,7 +955,7 @@
                     </div>` : ''}
                     
                     <div class="gift-info">
-                        <h4>Gift Details</h4>
+                        <h4>${t.giftDetails}</h4>
                         <div class="gift-details">
                             <div class="gift-type">${data.giftType}</div>
                             ${data.giftName ? `<div class="gift-name">${data.giftName}</div>` : ''}
@@ -844,23 +971,23 @@
                                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                                     </svg>
                                 </div>
-                                <h4>Gift Goal Achieved! 🎉</h4>
-                                <p>This occasion has reached its funding goal. Thank you to all contributors!</p>
+                                <h4>${t.giftGoalAchieved}</h4>
+                                <p>${t.thankYouMessage}</p>
                                 <div class="completion-stats">
                                     <div class="stat-item">
-                                        <span class="stat-label">Total Collected:</span>
+                                        <span class="stat-label">${t.totalCollected}</span>
                                         <span class="stat-value">${data.stats.totalPayments} SAR</span>
                                     </div>
                                     <div class="stat-item">
-                                        <span class="stat-label">Contributors:</span>
-                                        <span class="stat-value">${data.stats.paymentCount} people</span>
+                                        <span class="stat-label">${t.contributors}</span>
+                                        <span class="stat-value">${data.stats.paymentCount} ${t.people}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>` :
-                        `<div class="payment-section">
+                        `                        <div class="payment-section">
                             <div class="payment-amount">
-                                <h4>Your Contribution</h4>
+                                <h4>${t.yourContribution}</h4>
                                 <div class="amount-display">
                                     <span class="currency">SAR</span>
                                     <span class="amount">${data.amountForEveryone}</span>
@@ -869,23 +996,23 @@
                             
                             <form id="paymentForm" class="payment-form">
                                 <div class="form-group">
-                                    <label for="contributorName">Your Name *</label>
+                                    <label for="contributorName">${t.yourName}</label>
                                     <input type="text" id="contributorName" name="contributorName" required>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="contributorPhone">Phone Number *</label>
+                                    <label for="contributorPhone">${t.phoneNumber}</label>
                                     <input type="tel" id="contributorPhone" name="contributorPhone" required>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="contributorEmail">Email *</label>
+                                    <label for="contributorEmail">${t.email}</label>
                                     <input type="email" id="contributorEmail" name="contributorEmail" required>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="message">Message for ${data.receiverName} (Optional)</label>
-                                    <textarea id="message" name="message" rows="3" placeholder="Write a personal message..."></textarea>
+                                    <label for="message">${t.message} ${data.receiverName} (Optional)</label>
+                                    <textarea id="message" name="message" rows="3" placeholder="${t.messagePlaceholder}"></textarea>
                                 </div>
                                 
                                 <div class="payment-buttons">
@@ -893,7 +1020,7 @@
                                         <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
                                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                                         </svg>
-                                        Pay ${data.amountForEveryone} SAR
+                                        ${t.payButton} ${data.amountForEveryone} SAR
                                     </button>
                                     
                                     <button type="button" class="btn btn-apple-pay" id="applePayBtn" style="display: none;" onclick="initiateApplePay()">
@@ -974,7 +1101,6 @@
                 
                 if (response.ok) {
                     const paymentResult = await response.json();
-                    console.log('Payment initiated:', paymentResult);
                     
                     // Store transaction reference for verification
                     if (paymentResult.transactionRef) {
@@ -993,7 +1119,6 @@
                 }
                 
             } catch (error) {
-                console.error('Payment error:', error);
                 alert('Payment failed. Please try again.');
                 
                 // Reset button
@@ -1006,7 +1131,6 @@
         // Apple Pay Support Functions - Hidden for now
         function checkApplePaySupport() {
             // Apple Pay hidden until backend supports it
-            console.log('Apple Pay temporarily disabled');
             const applePayBtn = document.getElementById('applePayBtn');
             if (applePayBtn) {
                 applePayBtn.style.display = 'none';
@@ -1140,17 +1264,13 @@
         
         if (/android/i.test(userAgent)) {
             // Android - use custom scheme first, then intent
-            console.log('Android device detected');
-            
             // Try custom scheme first
             const customSchemeUrl = `hadawi://s/${occasionId}`;
-            console.log('Trying custom scheme URL:', customSchemeUrl);
             safeRedirect(customSchemeUrl, 'Custom Scheme');
             
             // If custom scheme doesn't work, try intent URL after 1 second
             setTimeout(() => {
                 if (!hasRedirected) {
-                    console.log('Custom scheme failed, trying intent URL');
                     const intentUrl = `intent://occasion/${occasionId}#Intent;scheme=hadawi;package=com.app.hadawi_app;S.browser_fallback_url=${window.location.href};end`;
                     safeRedirect(intentUrl, 'Intent URL');
                 }
@@ -1159,24 +1279,19 @@
             // Final fallback to load occasion details after 2.5 seconds
             setTimeout(() => {
                 if (!hasRedirected) {
-                    console.log('All methods failed, loading occasion details');
                     loadOccasionDetails();
                 }
             }, 2500);
             
         } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
             // iOS - use custom scheme first, then Universal Links
-            console.log('iOS device detected');
-            
             // Try custom scheme first
             const customSchemeUrl = `hadawi://s/${occasionId}`;
-            console.log('Trying custom scheme URL:', customSchemeUrl);
             safeRedirect(customSchemeUrl, 'Custom Scheme');
             
             // If custom scheme doesn't work, try Universal Links after 1 second
             setTimeout(() => {
                 if (!hasRedirected) {
-                    console.log('Custom scheme failed, trying Universal Links');
                     safeRedirect(appUrl, 'Universal Links');
                 }
             }, 1000);
@@ -1184,14 +1299,12 @@
             // Final fallback to load occasion details after 2.5 seconds
             setTimeout(() => {
                 if (!hasRedirected) {
-                    console.log('All methods failed, loading occasion details');
                     loadOccasionDetails();
                 }
             }, 2500);
             
         } else {
             // Desktop - load occasion details immediately
-            console.log('Desktop detected, loading occasion details');
             loadOccasionDetails();
         }
         
@@ -1203,7 +1316,6 @@
         // Failsafe: If nothing worked after 3 seconds, force load occasion details
         setTimeout(() => {
             if (!hasRedirected) {
-                console.log('FAILSAFE: Force loading occasion details');
                 hasRedirected = true;
                 loadOccasionDetails();
             }
