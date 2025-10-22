@@ -1003,16 +1003,13 @@
             }
         }
         
-        // Apple Pay Support Functions
+        // Apple Pay Support Functions - Hidden for now
         function checkApplePaySupport() {
-            if (window.ApplePaySession && ApplePaySession.canMakePayments()) {
-                console.log('Apple Pay is supported');
-                const applePayBtn = document.getElementById('applePayBtn');
-                if (applePayBtn) {
-                    applePayBtn.style.display = 'flex';
-                }
-            } else {
-                console.log('Apple Pay is not supported');
+            // Apple Pay hidden until backend supports it
+            console.log('Apple Pay temporarily disabled');
+            const applePayBtn = document.getElementById('applePayBtn');
+            if (applePayBtn) {
+                applePayBtn.style.display = 'none';
             }
         }
         
@@ -1146,7 +1143,7 @@
             console.log('Android device detected');
             
             // Try custom scheme first
-            const customSchemeUrl = `hadawi://s/${window.location.href}`;
+            const customSchemeUrl = `hadawi://s/${occasionId}`;
             console.log('Trying custom scheme URL:', customSchemeUrl);
             safeRedirect(customSchemeUrl, 'Custom Scheme');
             
@@ -1172,7 +1169,7 @@
             console.log('iOS device detected');
             
             // Try custom scheme first
-            const customSchemeUrl = `hadawi://s/${window.location.href}`;
+            const customSchemeUrl = `hadawi://s/${occasionId}`;
             console.log('Trying custom scheme URL:', customSchemeUrl);
             safeRedirect(customSchemeUrl, 'Custom Scheme');
             
