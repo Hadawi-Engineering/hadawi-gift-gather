@@ -603,10 +603,11 @@
         
         // Function to load occasion details from backend
         let isLoadingOccasionDetails = false;
+        let hasLoadedOccasionDetails = false;
         
         async function loadOccasionDetails() {
-            if (isLoadingOccasionDetails) {
-                console.log('Already loading occasion details, skipping...');
+            if (isLoadingOccasionDetails || hasLoadedOccasionDetails) {
+                console.log('Already loading or loaded occasion details, skipping...');
                 return;
             }
             
@@ -627,6 +628,7 @@
                 if (response.ok) {
                     const occasionData = await response.json();
                     console.log('Occasion details loaded:', occasionData);
+                    hasLoadedOccasionDetails = true;
                     displayOccasionDetails(occasionData);
                 } else {
                     console.error('Failed to load occasion details');
