@@ -784,7 +784,8 @@
                 payerPhone: formData.get('contributorPhone'),
                 payerEmail: formData.get('contributorEmail') || '',
                 message: formData.get('message') || '',
-                currency: "SAR"
+                currency: "SAR",
+                returnUrl: "https://hadawi.sa/payment/result"
             };
             
             try {

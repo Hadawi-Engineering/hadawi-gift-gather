@@ -11,6 +11,10 @@
       {
         "source": "/payment/success",
         "destination": "/payment/success.html"
+      },
+      {
+        "source": "/payment/result",
+        "destination": "/payment/result.html"
       }
     ],
     "headers": [
