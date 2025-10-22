@@ -497,6 +497,90 @@
             cursor: not-allowed;
         }
         
+        /* Completion Section */
+        .completion-section {
+            background: linear-gradient(135deg, var(--success-100) 0%, #f0fdf4 100%);
+            border: 2px solid var(--success-500);
+            border-radius: 16px;
+            padding: 32px;
+            margin-top: 24px;
+            text-align: center;
+        }
+        
+        .completion-message {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .completion-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--success-500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: completionPulse 2s ease-in-out infinite;
+        }
+        
+        .completion-icon svg {
+            width: 32px;
+            height: 32px;
+            color: white;
+        }
+        
+        @keyframes completionPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .completion-message h4 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--success-500);
+            margin: 0;
+        }
+        
+        .completion-message p {
+            font-size: 16px;
+            color: #374151;
+            margin: 0;
+            line-height: 1.5;
+        }
+        
+        .completion-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 12px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .stat-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--success-500);
+        }
+        
         @media (max-width: 480px) {
             .container {
                 padding: 24px;
@@ -711,44 +795,67 @@
                         </div>
                     </div>
                     
-                    <div class="payment-section">
-                        <div class="payment-amount">
-                            <h4>Your Contribution</h4>
-                            <div class="amount-display">
-                                <span class="currency">SAR</span>
-                                <span class="amount">${data.amountForEveryone}</span>
+                    ${data.stats && data.stats.totalPayments >= data.giftPrice ? 
+                        `<div class="completion-section">
+                            <div class="completion-message">
+                                <div class="completion-icon">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                    </svg>
+                                </div>
+                                <h4>Gift Goal Achieved! 🎉</h4>
+                                <p>This occasion has reached its funding goal. Thank you to all contributors!</p>
+                                <div class="completion-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Total Collected:</span>
+                                        <span class="stat-value">${data.stats.totalPayments} SAR</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Contributors:</span>
+                                        <span class="stat-value">${data.stats.paymentCount} people</span>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <form id="paymentForm" class="payment-form">
-                            <div class="form-group">
-                                <label for="contributorName">Your Name *</label>
-                                <input type="text" id="contributorName" name="contributorName" required>
+                        </div>` :
+                        `<div class="payment-section">
+                            <div class="payment-amount">
+                                <h4>Your Contribution</h4>
+                                <div class="amount-display">
+                                    <span class="currency">SAR</span>
+                                    <span class="amount">${data.amountForEveryone}</span>
+                                </div>
                             </div>
                             
-                            <div class="form-group">
-                                <label for="contributorPhone">Phone Number *</label>
-                                <input type="tel" id="contributorPhone" name="contributorPhone" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="contributorEmail">Email (Optional)</label>
-                                <input type="email" id="contributorEmail" name="contributorEmail">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="message">Message for ${data.receiverName} (Optional)</label>
-                                <textarea id="message" name="message" rows="3" placeholder="Write a personal message..."></textarea>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary payment-btn">
-                                <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                                </svg>
-                                Pay ${data.amountForEveryone} SAR
-                            </button>
-                        </form>
-                    </div>
+                            <form id="paymentForm" class="payment-form">
+                                <div class="form-group">
+                                    <label for="contributorName">Your Name *</label>
+                                    <input type="text" id="contributorName" name="contributorName" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="contributorPhone">Phone Number *</label>
+                                    <input type="tel" id="contributorPhone" name="contributorPhone" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="contributorEmail">Email (Optional)</label>
+                                    <input type="email" id="contributorEmail" name="contributorEmail">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="message">Message for ${data.receiverName} (Optional)</label>
+                                    <textarea id="message" name="message" rows="3" placeholder="Write a personal message..."></textarea>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary payment-btn">
+                                    <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                    </svg>
+                                    Pay ${data.amountForEveryone} SAR
+                                </button>
+                            </form>
+                        </div>`
+                    }
                 </div>
             `;
             
