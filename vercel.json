@@ -9,8 +9,8 @@
         "destination": "/occasion/[id].html"
       },
       {
-        "source": "/payment/(.*)",
-        "destination": "/s/[id].html"
+        "source": "/payment/success",
+        "destination": "/payment/success.html"
       }
     ],
     "headers": [

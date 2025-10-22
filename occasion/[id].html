@@ -776,13 +776,18 @@
             
             const form = event.target;
             const formData = new FormData(form);
+            
+            // Generate a unique payer ID (you might want to use a proper user ID from your system)
+            const payerId = 'user-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+            
             const paymentData = {
-                contributorName: formData.get('contributorName'),
-                contributorPhone: formData.get('contributorPhone'),
-                contributorEmail: formData.get('contributorEmail'),
-                message: formData.get('message'),
-                amount: window.occasionData.amountForEveryone,
-                occasionId: window.occasionData.id
+                occasionId: window.occasionData.id,
+                payerId: payerId,
+                amount: parseFloat(window.occasionData.amountForEveryone),
+                currency: "SAR",
+                description: `Payment for ${window.occasionData.occasionName} - ${window.occasionData.receiverName}`,
+                returnUrl: "https://hadawi.sa/payment/success",
+                callbackUrl: "https://api.hadawi.sa/payments/webhook"
             };
             
             try {
@@ -792,8 +797,17 @@
                 submitBtn.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; margin: 0 auto;"></div> Processing...';
                 submitBtn.disabled = true;
                 
-                // Create payment with ClickPay
-                const response = await fetch('https://api.hadawi.sa/payments/create', {
+                // Store form data in sessionStorage for later use
+                sessionStorage.setItem('paymentFormData', JSON.stringify({
+                    contributorName: formData.get('contributorName'),
+                    contributorPhone: formData.get('contributorPhone'),
+                    contributorEmail: formData.get('contributorEmail'),
+                    message: formData.get('message'),
+                    occasionId: window.occasionData.id
+                }));
+                
+                // Initiate payment with ClickPay
+                const response = await fetch('https://api.hadawi.sa/payments/initiate', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -803,16 +817,20 @@
                 
                 if (response.ok) {
                     const paymentResult = await response.json();
-                    console.log('Payment created:', paymentResult);
+                    console.log('Payment initiated:', paymentResult);
+                    
+                    // Store transaction reference for verification
+                    sessionStorage.setItem('transactionRef', paymentResult.transactionRef);
                     
                     // Redirect to ClickPay hosted payment page
-                    if (paymentResult.paymentUrl) {
+                    if (paymentResult.success && paymentResult.paymentUrl) {
                         window.location.href = paymentResult.paymentUrl;
                     } else {
                         throw new Error('No payment URL received');
                     }
                 } else {
-                    throw new Error('Failed to create payment');
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to initiate payment');
                 }
                 
             } catch (error) {
