@@ -108,8 +108,8 @@ module.exports = async (req, res) => {
         country: 'SA',
         zip: '00000'
       },
-      callback: `${baseUrl}/payment/result.html`,
-      return: `${baseUrl}/payment/result.html`,
+      callback: `${baseUrl}/payments/return`,
+      return: `${baseUrl}/payments/return`,
       hide_shipping: true,
       framed: false,
       language: language || 'ar'

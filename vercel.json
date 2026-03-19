@@ -19,6 +19,10 @@
     {
       "source": "/payment/result",
       "destination": "/payment/result.html"
+    },
+    {
+      "source": "/payments/return",
+      "destination": "/api/payments-return"
     }
   ],
   "headers": [
