@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-language="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contribute to Gift - Hadawi</title>
+    
+    <!-- iOS Smart App Banner -->
+    <meta name="apple-itunes-app" content="app-id=6742405578">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-50: #F8F7FA;
+            --primary-100: #F0EDF4;
+            --primary-200: #DED7E4;
+            --primary-300: #BFB4CC;
+            --primary-400: #A697B5;
+            --primary-500: #8F7F9F;
+            --primary-600: #766689;
+            --primary-700: #5D4E6E;
+            --primary-800: #443A52;
+            --primary-900: #2B2533;
+            --success-100: #d1fae5;
+            --success-500: #10b981;
+            --font-family-en: 'Roboto', sans-serif;
+            --font-family-ar: 'Tajawal', sans-serif;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html[dir="ltr"] {
+            font-family: var(--font-family-en);
+        }
+        
+        html[dir="rtl"] {
+            font-family: var(--font-family-ar);
+        }
+        
+        body {
+            font-family: var(--font-family-en);
+            background: linear-gradient(135deg, var(--primary-50) 0%, #f5f5f5 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-y: auto;
+        }
+        
+        /* Background Pattern */
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.3;
+            z-index: 0;
+        }
+        
+        .bg-blob {
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            filter: blur(60px);
+            animation: blob 7s infinite;
+        }
+        
+        .bg-blob:nth-child(1) {
+            top: 0;
+            left: 0;
+            background: var(--primary-200);
+        }
+        
+        .bg-blob:nth-child(2) {
+            top: 0;
+            right: 0;
+            background: var(--primary-300);
+            animation-delay: 2s;
+        }
+        
+        .bg-blob:nth-child(3) {
+            bottom: 0;
+            left: 80px;
+            background: var(--primary-400);
+            animation-delay: 4s;
+        }
+        
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        
+        .container {
+            max-width: 420px;
+            width: 100%;
+            background: white;
+            padding: 32px;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            margin: 20px 0;
+        }
+        
+        /* Language Switcher */
+        .language-switcher {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            z-index: 20;
+        }
+        
+        .lang-btn {
+            background: var(--primary-100);
+            color: var(--primary-700);
+            border: 1px solid var(--primary-200);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .lang-btn:hover {
+            background: var(--primary-200);
+            border-color: var(--primary-300);
+            transform: translateY(-1px);
+        }
+        
+        .lang-btn::before {
+            content: '🌐';
+            font-size: 14px;
+        }
+        
+        .logo {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 24px;
+            background: var(--primary-600);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -1px;
+        }
+        
+        h2 {
+            font-size: 24px;
+            font-weight: 500;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 32px;
+        }
+        
+        .spinner {
+            border: 3px solid var(--primary-100);
+            border-top: 3px solid var(--primary-600);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 32px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            font-size: 16px;
+            color: #ef4444;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        
+        /* Occasion Details Styles */
+        .occasion-details {
+            margin-top: 24px;
+        }
+        
+        .occasion-info {
+            text-align: left;
+            margin-bottom: 24px;
+        }
+        
+        .occasion-info h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+        
+        .occasion-description {
+            font-size: 14px;
+            color: #6b7280;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        
+        .occasion-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+        
+        .occasion-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        /* Occasion Header */
+        .occasion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .occasion-header h3 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+        }
+        
+        .occasion-type {
+            background: var(--primary-100);
+            color: var(--primary-700);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        /* Meta Items */
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            color: var(--primary-500);
+        }
+        
+        /* Occasion Note */
+        .occasion-note {
+            background: #f9fafb;
+            border-left: 4px solid var(--primary-500);
+            padding: 12px 16px;
+            margin: 16px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .occasion-note p {
+            margin: 0;
+            font-size: 14px;
+            color: #374151;
+        }
+        
+        /* Gift Info */
+        .gift-info {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 20px 0;
+        }
+        
+        .gift-info h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0 0 12px 0;
+        }
+        
+        .gift-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .gift-type {
+            font-size: 14px;
+            color: var(--primary-600);
+            font-weight: 500;
+        }
+        
+        .gift-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .gift-amount {
+            font-size: 18px;
+            font-weight: 700;
+            color: #059669;
+        }
+        
+        /* Payment Section */
+        .payment-section {
+            background: white;
+            border: 2px solid var(--primary-200);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 24px;
+        }
+        
+        .payment-amount {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .payment-amount h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0 0 12px 0;
+        }
+        
+        .amount-display {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 4px;
+        }
+        
+        .amount-display .currency {
+            font-size: 18px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .amount-display .amount {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-600);
+        }
+        
+        /* Payment Form */
+        .payment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .form-group label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            text-align: left;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(118, 102, 137, 0.1);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .payment-btn {
+            margin-top: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 16px 24px;
+            background: var(--primary-600);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(118, 102, 137, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .payment-btn:hover:not(:disabled) {
+            background: var(--primary-700);
+            box-shadow: 0 4px 16px rgba(118, 102, 137, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .payment-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .btn-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+        
+        /* Completion Section */
+        .completion-section {
+            background: linear-gradient(135deg, var(--success-100) 0%, #f0fdf4 100%);
+            border: 2px solid var(--success-500);
+            border-radius: 16px;
+            padding: 32px;
+            margin-top: 24px;
+            text-align: center;
+        }
+        
+        .completion-message {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .completion-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--success-500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: completionPulse 2s ease-in-out infinite;
+        }
+        
+        .completion-icon svg {
+            width: 32px;
+            height: 32px;
+            color: white;
+        }
+        
+        @keyframes completionPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .completion-message h4 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--success-500);
+            margin: 0;
+        }
+        
+        .completion-message p {
+            font-size: 16px;
+            color: #374151;
+            margin: 0;
+            line-height: 1.5;
+        }
+        
+        .completion-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 12px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .stat-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--success-500);
+        }
+        
+        /* RTL Support */
+        html[dir="rtl"] .form-group label {
+            text-align: right;
+        }
+        
+        html[dir="rtl"] .occasion-info {
+            text-align: right;
+        }
+        
+        html[dir="rtl"] .occasion-note {
+            border-left: none;
+            border-right: 4px solid var(--primary-500);
+            border-radius: 8px 0 0 8px;
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+                align-items: flex-start;
+            }
+            
+            .container {
+                padding: 24px;
+                margin: 10px;
+                max-width: calc(100vw - 20px);
+            }
+            
+            h2 {
+                font-size: 20px;
+            }
+            
+            .payment-section {
+                padding: 20px;
+            }
+            
+            .completion-section {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-blob"></div>
+    <div class="bg-blob"></div>
+    <div class="bg-blob"></div>
+    
+    <div class="container">
+        <div class="language-switcher">
+            <button onclick="switchLanguage()" class="lang-btn" id="langBtn">
+                <span id="langText">العربية</span>
+            </button>
+        </div>
+        
+        <div class="logo">H</div>
+        <h2 id="pageTitle">Loading Gift Details...</h2>
+        <p class="subtitle" id="pageSubtitle">Please wait while we load the occasion details...</p>
+        <div class="spinner" id="loadingSpinner"></div>
+        
+        <!-- Occasion details will be dynamically inserted here -->
+        <div id="occasionContainer"></div>
+    </div>
+
+    <!-- Include Firebase SDK and configuration -->
+    <script type="module" src="firebase-config.js"></script>
+    
+    <!-- Include the main JavaScript file with Vercel integration -->
+    <script type="module" src="main-vercel.js"></script>
+</body>
+</html>
+

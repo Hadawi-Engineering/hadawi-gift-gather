@@ -723,6 +723,13 @@
     </div>
 
     <script>
+        // Get the appropriate contribution amount
+        function getContributionAmount(data) {
+            if (data.amountForEveryone) return parseFloat(data.amountForEveryone);
+            if (data.amountPerPerson) return parseFloat(data.amountPerPerson);
+            return parseFloat(data.totalAmount) || parseFloat(data.giftPrice) || 0;
+        }
+
         // Language support
         function getLanguage() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -1048,7 +1055,7 @@
                                 <h4>${t.yourContribution}</h4>
                                 <div class="amount-display">
                                     <span class="currency">SAR</span>
-                                    <span class="amount">${data.amountForEveryone}</span>
+                                    <span class="amount">${getContributionAmount(data)}</span>
                                 </div>
                             </div>
                             
@@ -1078,7 +1085,7 @@
                                         <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
                                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                                         </svg>
-                                        ${t.payButton} ${data.amountForEveryone} SAR
+                                        ${t.payButton} ${getContributionAmount(data)} SAR
                                     </button>
                                     
                                     <button type="button" class="btn btn-apple-pay" id="applePayBtn" style="display: none;" onclick="initiateApplePay()">
@@ -1124,7 +1131,7 @@
             
             const paymentData = {
                 occasionId: window.occasionData.id,
-                amount: parseFloat(window.occasionData.amountForEveryone),
+                amount: getContributionAmount(window.occasionData),
                 payerName: formData.get('contributorName'),
                 payerPhone: formData.get('contributorPhone'),
                 payerEmail: formData.get('contributorEmail'),
@@ -1181,7 +1188,7 @@
                 
                 // Reset button
                 const submitBtn = form.querySelector('.payment-btn');
-                submitBtn.innerHTML = `Pay ${window.occasionData.amountForEveryone} SAR`;
+                submitBtn.innerHTML = `Pay ${getContributionAmount(window.occasionData)} SAR`;
                 submitBtn.disabled = false;
             }
         }
@@ -1223,7 +1230,7 @@
                 ],
                 total: {
                     label: 'Hadawi Payment',
-                    amount: window.occasionData.amountForEveryone
+                    amount: getContributionAmount(window.occasionData)
                 },
                 merchantIdentifier: 'merchant.com.app.hadawiapp'
             };
@@ -1249,7 +1256,7 @@
                     // Create payment data with Apple Pay token
                     const paymentData = {
                         occasionId: window.occasionData.id,
-                        amount: parseFloat(window.occasionData.amountForEveryone),
+                        amount: getContributionAmount(window.occasionData),
                         payerName: formData.get('contributorName'),
                         payerPhone: formData.get('contributorPhone'),
                         payerEmail: formData.get('contributorEmail'),

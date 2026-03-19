@@ -1,0 +1,37 @@
+{
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "functions/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/collect/:id",
+        "destination": "/collect/[id].html"
+      },
+      {
+        "source": "/occasion/:id",
+        "destination": "/occasion/[id].html"
+      },
+      {
+        "source": "/s/:id",
+        "destination": "/s/[id].html"
+      }
+    ]
+  },
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs18"
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  }
+}
+
+
+
+

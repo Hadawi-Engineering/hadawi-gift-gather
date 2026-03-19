@@ -1,0 +1,37 @@
+# Files to ignore in Vercel deployment
+
+# Firebase (not needed for Vercel)
+functions/
+firebase.json
+.firebase/
+.firebaserc
+
+# Development
+node_modules/
+.git/
+.env
+.env.local
+.env.*.local
+
+# Documentation (optional - comment out if you want to deploy docs)
+# ARCHITECTURE.md
+# SETUP.md
+# IMPLEMENTATION_SUMMARY.md
+# PROJECT_STRUCTURE.txt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+
+

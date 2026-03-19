@@ -1,0 +1,44 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Occasions collection - Read-only for clients
+    match /occasions/{occasionId} {
+      // Allow read access to anyone with the link
+      allow read: if true;
+      
+      // Only authenticated users or admin can write
+      allow write: if request.auth != null && request.auth.token.admin == true;
+    }
+    
+    // Payments collection
+    match /payments/{paymentId} {
+      // Allow users to read their own payment records
+      allow read: if resource.data.payerEmail == request.auth.token.email;
+      
+      // Allow creating payment records (will be validated by Cloud Functions)
+      allow create: if request.resource.data.status == 'pending';
+      
+      // Only Cloud Functions can update payment status
+      allow update: if false;
+      
+      // No direct deletes
+      allow delete: if false;
+    }
+    
+    // Contributors collection (optional - for tracking)
+    match /contributors/{contributorId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // Default deny all other collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+
+
+
+
